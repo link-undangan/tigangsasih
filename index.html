@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Undangan Tigang Sasih</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;600&family=Great+Vibes&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== GLOBAL TYPOGRAPHY SYSTEM ===== */
+
+/* font utama halaman */
+body{
+  font-family:'Poppins', sans-serif;
+}
+
+/* JUDUL BESAR */
+h1,h2,h3{
+  font-family:'Cinzel', serif;
+  letter-spacing:2px;
+  color:#6b3f22;
+}
+
+/* nama tamu */
+#guestName,#guestName2{
+  font-family:'Cormorant Garamond', serif;
+  font-size:28px;
+  letter-spacing:1px;
+}
+
+/* teks pembuka amplop */
+.open-text{
+  font-family:'Cormorant Garamond', serif;
+  font-size:20px;
+}
+
+/* semua isi teks */
+p,span,label,input,textarea,select{
+  font-family:'Cormorant Garamond', serif;
+  font-size:18px;
+}
+
+/* teks ucapan tamu */
+.wish-text{
+  font-family:'Cormorant Garamond', serif;
+  font-size:16px;
+  line-height:1.7;
+}
+
+/* mantra penutup */
+.mantra{
+  font-family:'Great Vibes', cursive;
+  font-size:30px;
+}
+
+.guest{
+  background:#f6f1e9;
+  margin:10px 20px;
+  padding:12px;
+  border-radius:10px;
+  text-align:left;
+}
+
+#guestName{
+  margin-bottom:70px; /* sebelumnya 40px */
+  color:#7a4b2a;
+}
+
+.nama{font-weight:bold;color:#7a4b2a}
+/* body{margin:0;font-family:'Segoe UI';background:#f6f1e9;text-align:center} */
+body{
+  margin:0;
+  font-family:'Segoe UI';
+  text-align:center;
+
+  background: radial-gradient(circle at top,
+    #f6f1e9,
+    #efe2cf
+  );
+}
+#envelopePage{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    padding-top:90px;
+}
+.envelope-wrapper{
+  margin-top:20px;
+  cursor:pointer;
+  transition:0.4s;
+}
+
+.envelope-wrapper:hover{
+  transform:translateY(-8px);
+}
+
+.envelope{
+  width:230px;
+  height:150px;
+  background:linear-gradient(145deg,#d4af37,#b8962e);
+  position:relative;
+  border-radius:8px;
+  box-shadow:0 15px 30px rgba(0,0,0,0.25);
+  margin:auto;
+}
+
+/* tutup amplop */
+.envelope:before{
+  content:"";
+  position:absolute;
+  top:-55px; /* sebelumnya -75px */
+  left:0;
+  border-left:115px solid transparent;
+  border-right:115px solid transparent;
+  border-bottom:75px solid #c9a227;
+}
+
+/* tulisan buka */
+.open-text{
+  margin-top:18px;
+  font-size:18px;
+  color:#7a4b2a;
+  font-weight:600;
+  letter-spacing:1px;
+}
+
+#invitation{display:none;max-width:500px;margin:auto;background:white;padding-bottom:30px}
+img{width:100%}
+.button{display:block;margin:15px 30px;padding:15px;border-radius:10px;text-decoration:none;color:white;font-weight:bold}
+.maps{background:#8B5E3C}.wa{background:#25D366}
+/*h1{color:#7a4b2a}*/
+h1{
+  font-size:42px;
+  background: linear-gradient(45deg,#c9a227,#f7e7b3,#c9a227);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 3px 10px rgba(0,0,0,.2);
+  letter-spacing:3px;
+}
+
+.form-field{
+  width:85%;
+  padding:12px;
+  margin:8px auto;
+  border-radius:10px;
+  border:1px solid #ddd;
+  font-size:16px;
+  box-sizing:border-box;
+  display:block;
+}
+
+textarea{height:80px}
+.submit{background:#7a4b2a;color:white;border:none;padding:12px 25px;border-radius:8px}
+
+/* ===== ANIMASI BUNGA JATUH ===== */
+/* ===== BUNGA JEPUN BALI ===== */
+.flower{
+  position:absolute;
+  top:-80px;
+  width:28px;
+  height:28px;
+  animation:fall linear infinite;
+}
+
+.flower svg{
+  width:100%;
+  height:100%;
+  filter: drop-shadow(0 0 6px rgba(255,215,120,0.6));
+}
+
+@keyframes fall{
+  0%{
+    transform:translateY(-10vh) translateX(0) rotate(0deg);
+  }
+  100%{
+    transform:translateY(110vh) translateX(80px) rotate(360deg);
+  }
+}
+
+/* ===== BUTTON WEDDING STYLE ===== */
+
+.btn-kirim{
+  position: relative;
+  width:85%;
+  margin-top:12px;
+  padding:14px 18px;
+  border-radius:10px;
+  border:none;
+  font-size:16px;
+  font-weight:600;
+  letter-spacing:.5px;
+  cursor:pointer;
+  color:white;
+  text-align:center;
+  overflow:hidden;
+
+  /* warna dasar sama seperti tombol lokasi */
+  background: linear-gradient(135deg,#c9a46c,#a8834c);
+  box-shadow: 0 6px 16px rgba(0,0,0,.18);
+
+  transition: all .35s ease;
+}
+
+/* glow hover */
+.btn-kirim:hover{
+  transform: translateY(-2px) scale(1.01);
+  background: linear-gradient(135deg,#e4c48d,#c39a5e);
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.25),
+    0 0 18px rgba(212,175,55,.45); /* glow emas */
+}
+
+/* click effect */
+.btn-kirim:active{
+  transform: scale(.96);
+  box-shadow: 0 4px 10px rgba(0,0,0,.25);
+}
+
+/* shimmer effect */
+.btn-kirim::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-120%;
+  width:80%;
+  height:100%;
+  background:linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,.45),
+    transparent
+  );
+  transition:all .7s ease;
+}
+
+.btn-kirim:hover::before{
+  left:120%;
+}
+
+/* loader */
+.btn-loader{
+  width:20px;
+  height:20px;
+  border:3px solid rgba(255,255,255,.4);
+  border-top:3px solid white;
+  border-radius:50%;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  display:none;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+  to{ transform:translate(-50%,-50%) rotate(360deg); }
+}
+
+/* state loading */
+.btn-kirim.loading .btn-text{
+  visibility:hidden;
+}
+.btn-kirim.loading .btn-loader{
+  display:block;
+}
+
+.btn-kirim.loading{
+  background: linear-gradient(135deg,#a7a7a7,#8e8e8e);
+  box-shadow:none;
+  cursor:not-allowed;
+}
+
+/* ===== WRAPPER SCROLL ===== */
+.guestbook-wrapper{
+  height:260px;              /* tinggi area ucapan */
+  overflow:hidden;
+  position:relative;
+  mask-image: linear-gradient(to bottom,
+      transparent,
+      black 15%,
+      black 85%,
+      transparent);
+}
+
+/* container isi ucapan */
+#guestbook{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  animation: scrollGuestbook 35s linear infinite;
+}
+
+/* pause saat mouse hover */
+.guestbook-wrapper:hover #guestbook{
+  animation-play-state: paused;
+}
+
+/* kartu ucapan */
+.wish{
+  background:#fff;
+  padding:12px 16px;
+  border-radius:14px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+  font-size:14px;
+}
+
+/* animasi naik */
+@keyframes scrollGuestbook{
+  0%{ transform:translateY(0); }
+  100%{ transform:translateY(-50%); }
+}
+
+/* ===== LUXURY GLASS CARD BALI ===== */
+.wish{
+  position:relative;
+  padding:16px 18px;
+  border-radius:18px;
+
+  /* glass effect */
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border: 1px solid rgba(201, 162, 39, 0.25);
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.08),
+    inset 0 0 0 1px rgba(255,255,255,.4);
+
+  overflow:hidden;
+}
+
+/* glow highlight animasi */
+.wish::before{
+  content:"";
+  position:absolute;
+  top:-50%;
+  left:-50%;
+  width:200%;
+  height:200%;
+  background: radial-gradient(
+    circle,
+    rgba(201,162,39,0.18),
+    transparent 60%
+  );
+  animation: glowMove 6s linear infinite;
+}
+
+@keyframes glowMove{
+  0%{ transform:translate(0,0); }
+  50%{ transform:translate(10%,10%); }
+  100%{ transform:translate(0,0); }
+}
+
+/* garis emas halus */
+.wish::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:2px;
+  background: linear-gradient(90deg,#c9a227,transparent,#c9a227);
+  opacity:.7;
+}
+
+/* header */
+.wish-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
+  position:relative;
+  z-index:2;
+}
+
+.wish-name{
+  font-weight:700;
+  color:#6b3f22;
+  font-size:15px;
+  letter-spacing:.3px;
+}
+
+/* badge status */
+.wish-status{
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:999px;
+  font-weight:600;
+  letter-spacing:.3px;
+}
+
+.wish-status.hadir{
+  background: rgba(46, 204, 113, 0.15);
+  color:#1e7a3a;
+  border:1px solid rgba(46, 204, 113, 0.35);
+}
+
+.wish-status.tidak{
+  background: rgba(231, 76, 60, 0.12);
+  color:#b42318;
+  border:1px solid rgba(231, 76, 60, 0.3);
+}
+
+/* isi ucapan */
+.wish-text{
+  font-size:14px;
+  color:#4e3a2a;
+  line-height:1.6;
+  margin-top:6px;
+  position:relative;
+  z-index:2;
+}
+
+</style>
+</head>
+
+<body>
+  <div class="flowers"></div>
+
+  <audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mp3">
+  </audio>
+
+<div id="envelopePage">
+  <h2 id="guestName">Anda Diundang</h2>
+
+  <div class="envelope-wrapper" onclick="openInvite()">
+      <div class="envelope"></div>
+      <div class="open-text">💌 Buka Undangan</div>
+  </div>
+</div>
+
+<div id="invitation">
+    <img src="poster.jpg">
+    <h1 id="guestName2"></h1>
+    <div id="countdown"></div>
+
+    <a class="button maps" href="https://maps.app.goo.gl/aLahR6SitdpfmLQu6">📍 Lokasi</a>
+
+    <h2>Konfirmasi Kehadiran</h2>
+
+    <input id="nama" class="form-field" placeholder="Nama Anda">
+
+<select id="hadir" class="form-field">
+  <option value="Hadir">Hadir</option>
+  <option value="Tidak Hadir">Tidak Hadir</option>
+</select>
+
+<input id="jumlah" class="form-field" type="number" value="1" placeholder="Jumlah Orang">
+
+<textarea id="ucapan" class="form-field" placeholder="Tulis ucapan & doa"></textarea>
+
+    <br>
+    <button id="btnKirim" class="btn-kirim" onclick="kirim()">
+      <span class="btn-text">Kirim Ucapan</span>
+      <span class="btn-loader"></span>
+    </button>
+
+    <p id="status"></p>
+    <h2>Ucapan & Doa Tamu</h2>
+    <div class="guestbook-wrapper">
+      <div id="guestbook"></div>
+    </div>
+    <p>Om Shanti Shanti Shanti Om 🙏</p>
+</div>
+
+<script>
+  const scriptURL = "https://script.google.com/macros/s/AKfycby9xRGZGTcTlQUmZusS7PPfRJ8ZyY4KCDMAxE7qEbr62VrqbFXLsrh-ZyYEE73zzwrW4w/exec";
+  
+  const envelopePage = document.getElementById("envelopePage");
+  const invitation   = document.getElementById("invitation");
+  const music        = document.getElementById("bgMusic");
+  
+  // nama tamu dari link
+  const params = new URLSearchParams(window.location.search);
+  const guest = params.get('to');
+  if(guest){
+    document.getElementById("guestName").innerHTML = "Yth. " + guest;
+    document.getElementById("guestName2").innerHTML = "Yth. " + guest;
+    document.getElementById("nama").value = guest;
+  }
+  
+  function openInvite(){
+    envelopePage.style.display="none";
+    invitation.style.display="block";
+    music.play().catch(()=>{});
+  }
+  
+  // countdown
+  const eventDate = new Date("May 18, 2026 15:00:00 GMT+0800");
+  setInterval(()=>{
+    const now=new Date().getTime();
+    const d=eventDate-now;
+  
+    if(d<=0){
+      document.getElementById("countdown").innerHTML="Acara sedang berlangsung";
+      return;
+    }
+  
+    document.getElementById("countdown").innerHTML =
+    "Acara dimulai dalam: "+
+    Math.floor(d/(1000*60*60*24))+" hari";
+  },1000);
+  
+  async function kirim(){
+  
+    const btn = document.getElementById("btnKirim");
+  
+    btn.classList.add("loading");
+  btn.disabled = true;
+  
+    const data = {
+      nama:document.getElementById("nama").value,
+      hadir:document.getElementById("hadir").value,
+      jumlah:document.getElementById("jumlah").value,
+      ucapan:document.getElementById("ucapan").value
+    };
+  
+    try{
+      await fetch(scriptURL,{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify(data),
+        mode:"no-cors" // hanya POST yg pakai ini
+      });
+  
+      document.getElementById("status").innerHTML="Terima kasih 🙏";
+  
+      document.getElementById("nama").value="";
+      document.getElementById("jumlah").value="1";
+      document.getElementById("ucapan").value="";
+  
+      function loadGuestbook(){
+  fetch(scriptURL)
+    .then(res=>res.json())
+    .then(data=>{
+      let html="";
+
+      const rows = data.slice(1).reverse();
+
+      rows.forEach(row=>{
+        html += `
+          <div class="wish">
+            <b>${row[1]}</b><br>
+            <span>${row[4]}</span>
+          </div>
+        `;
+      });
+
+      /* DUPLIKASI isi agar looping smooth */
+      document.getElementById("guestbook").innerHTML = html + html;
+    });
+}
+  
+    }catch(err){
+      document.getElementById("status").innerHTML="Gagal mengirim 😢";
+      console.log(err);
+    }
+  
+    btn.classList.remove("loading");
+btn.disabled = false;
+  }
+  
+  // ✅ LOAD GUESTBOOK (GET TANPA no-cors)
+  function loadGuestbook(){
+    fetch(scriptURL)
+      .then(res => res.json())
+      .then(data => {
+  
+        let html = "";
+        const rows = data.slice(1).filter(row => row[4]);
+  
+        rows.reverse().forEach(row => {
+          html += `
+  <div class="wish">
+    <div class="wish-header">
+      <div class="wish-name">${row[1]}</div>
+      <div class="wish-status ${row[2] === "Hadir" ? "hadir" : "tidak"}">
+        ${row[2]}
+      </div>
+    </div>
+    <div class="wish-text">
+      ${row[4]}
+    </div>
+  </div>
+`;
+        });
+  
+        if(html === ""){
+          html = "<p>Belum ada ucapan 💌</p>";
+        }
+  
+        document.getElementById("guestbook").innerHTML = html;
+      })
+      .catch(err => console.log("Guestbook error:", err));
+  }
+  
+  // autoplay fix
+  document.addEventListener("click", () => {
+    if (music.paused){
+      music.play().catch(()=>{});
+    }
+  });
+  
+  window.addEventListener("load", () => {
+    loadGuestbook();
+  });
+  </script>
+</body>
+</html>
