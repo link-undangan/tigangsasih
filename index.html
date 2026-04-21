@@ -8,11 +8,63 @@
 
 <style>
 
+:root{
+  --ink:#3b2a1a;        /* warna tinta utama */
+  --gold:#c6a24a;       /* gold aksen */
+}
+
+/* COUNTDOWN TITLE PREMIUM */
+.countdown-title{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  margin-top:35px;
+  margin-bottom:18px;
+}
+
+.countdown-title p{
+  font-family:'Cinzel', serif;
+  font-size:18px;
+  letter-spacing:4px;
+  font-weight:700;
+  color:var(--ink);
+  text-transform:uppercase;
+}
+
+/* garis emas kiri kanan */
+.countdown-title .line{
+  height:1px;
+  width:70px;
+  background:linear-gradient(
+    to right,
+    transparent,
+    #d4af37,
+    transparent
+  );
+}  
+
+/* countdown */
+#countdown{
+  margin-top:18px;
+  font-family:'Cinzel', serif;
+  font-size:22px;
+  letter-spacing:2px;
+  color:#d4af37;
+}
+
 /* ===== GLOBAL TYPOGRAPHY SYSTEM ===== */
 
 /* font utama halaman */
 body{
-  font-family:'Poppins', sans-serif;
+  margin:0;
+  font-family:'Segoe UI';
+  text-align:center;
+
+  background: radial-gradient(circle at top,
+    #f6f1e9,
+    #efe2cf
+  );
 }
 
 /* JUDUL BESAR */
@@ -24,9 +76,11 @@ h1,h2,h3{
 
 /* nama tamu */
 #guestName,#guestName2{
-  font-family:'Cormorant Garamond', serif;
-  font-size:28px;
-  letter-spacing:1px;
+  font-family:'Cinzel', serif;
+  font-size:30px;
+  font-weight:700;
+  letter-spacing:2px;
+  color:var(--ink);
 }
 
 /* teks pembuka amplop */
@@ -49,9 +103,27 @@ p,span,label,input,textarea,select{
 }
 
 /* mantra penutup */
+/* SACRED MANTRA STYLE */
 .mantra{
-  font-family:'Great Vibes', cursive;
-  font-size:30px;
+  margin-top:35px;
+  font-family:'Cormorant Garamond', serif;
+  font-size:28px;
+  letter-spacing:3px;
+  white-space:nowrap;
+  font-weight:600;
+  color:var(--ink);
+}
+
+/* garis emas kiri kanan mantra */
+.mantra .line{
+  height:1px;
+  width:80px;
+  background:linear-gradient(
+    to right,
+    transparent,
+    #d4af37,
+    transparent
+  );
 }
 
 .guest{
@@ -68,17 +140,7 @@ p,span,label,input,textarea,select{
 }
 
 .nama{font-weight:bold;color:#7a4b2a}
-/* body{margin:0;font-family:'Segoe UI';background:#f6f1e9;text-align:center} */
-body{
-  margin:0;
-  font-family:'Segoe UI';
-  text-align:center;
 
-  background: radial-gradient(circle at top,
-    #f6f1e9,
-    #efe2cf
-  );
-}
 #envelopePage{
     min-height:100vh;
     display:flex;
@@ -135,8 +197,10 @@ img{width:100%}
 h1{
   font-size:42px;
   background: linear-gradient(45deg,#c9a227,#f7e7b3,#c9a227);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+  background-clip:text;              /* standar */
+-webkit-background-clip:text;      /* Chrome & Safari */
+color:transparent;                 /* standar */
+-webkit-text-fill-color:transparent;
   text-shadow:0 3px 10px rgba(0,0,0,.2);
   letter-spacing:3px;
 }
@@ -415,6 +479,41 @@ textarea{height:80px}
   z-index:2;
 }
 
+/* ===== COUNTDOWN HORIZONTAL NO WRAP ===== */
+.countdown-wrapper{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  margin-top:20px;
+  flex-wrap:nowrap;          /* ← penting: tidak boleh turun baris */
+  overflow-x:auto;           /* ← kalau layar sangat kecil, scroll horizontal */
+  padding-bottom:5px;
+}
+
+.count-box{
+  background:#fff;
+  padding:10px 12px;
+  border-radius:14px;
+  min-width:65px;
+  text-align:center;
+  box-shadow:0 4px 10px rgba(0,0,0,0.15);
+  flex-shrink:0;             /* ← agar box tidak mengecil */
+}
+
+.count-number{
+  font-size:22px;
+  font-weight:bold;
+  color:#7a5c2e;
+  line-height:1;
+}
+
+.count-label{
+  font-size:11px;
+  letter-spacing:1px;
+  color:#777;
+}
+
 </style>
 </head>
 
@@ -437,9 +536,33 @@ textarea{height:80px}
 <div id="invitation">
     <img src="poster.jpg">
     <h1 id="guestName2"></h1>
-    <div id="countdown"></div>
 
-    <a class="button maps" href="https://maps.app.goo.gl/aLahR6SitdpfmLQu6">📍 Lokasi</a>
+    <div class="countdown-title" id="countdownTitle">
+      <span class="line"></span>
+      <p>Acara Dimulai Dalam</p>
+      <span class="line"></span>
+    </div>
+    <div id="countdownMessage" style="margin-top:10px;font-weight:600;color:#6b3f22;"></div>
+    <div class="countdown-wrapper" id="countdown">
+      <div class="count-box">
+        <div class="count-number" id="days">0</div>
+        <div class="count-label">HARI</div>
+      </div>
+      <div class="count-box">
+        <div class="count-number" id="hours">0</div>
+        <div class="count-label">JAM</div>
+      </div>
+      <div class="count-box">
+        <div class="count-number" id="minutes">0</div>
+        <div class="count-label">MENIT</div>
+      </div>
+      <div class="count-box">
+        <div class="count-number" id="seconds">0</div>
+        <div class="count-label">DETIK</div>
+      </div>
+    </div>
+
+    <a class="button maps" href="https://maps.app.goo.gl/aLahR6SitdpfmLQu6" target="_blank">📍 Lokasi</a>
 
     <h2>Konfirmasi Kehadiran</h2>
 
@@ -450,7 +573,7 @@ textarea{height:80px}
   <option value="Tidak Hadir">Tidak Hadir</option>
 </select>
 
-<input id="jumlah" class="form-field" type="number" value="1" placeholder="Jumlah Orang">
+<input id="jumlah" class="form-field" type="number" value="1" min="1" max="10" placeholder="Jumlah Orang">
 
 <textarea id="ucapan" class="form-field" placeholder="Tulis ucapan & doa"></textarea>
 
@@ -465,7 +588,11 @@ textarea{height:80px}
     <div class="guestbook-wrapper">
       <div id="guestbook"></div>
     </div>
-    <p>Om Shanti Shanti Shanti Om 🙏</p>
+    <div class="mantra">
+      <span class="line"></span>
+      Om Shanti Shanti Shanti Om
+      <span class="line"></span>
+    </div>
 </div>
 
 <script>
@@ -479,92 +606,139 @@ textarea{height:80px}
   const params = new URLSearchParams(window.location.search);
   const guest = params.get('to');
   if(guest){
-    document.getElementById("guestName").innerHTML = "Yth. " + guest;
-    document.getElementById("guestName2").innerHTML = "Yth. " + guest;
+    document.getElementById("guestName").textContent = "Yth. " + guest;
+    document.getElementById("guestName2").textContent = "Yth. " + guest;
     document.getElementById("nama").value = guest;
   }
   
   function openInvite(){
-    envelopePage.style.display="none";
-    invitation.style.display="block";
-    music.play().catch(()=>{});
-  }
-  
-  // countdown
-  const eventDate = new Date("May 18, 2026 15:00:00 GMT+0800");
-  setInterval(()=>{
-    const now=new Date().getTime();
-    const d=eventDate-now;
-  
-    if(d<=0){
-      document.getElementById("countdown").innerHTML="Acara sedang berlangsung";
-      return;
-    }
-  
-    document.getElementById("countdown").innerHTML =
-    "Acara dimulai dalam: "+
-    Math.floor(d/(1000*60*60*24))+" hari";
-  },1000);
-  
-  async function kirim(){
-  
-    const btn = document.getElementById("btnKirim");
-  
-    btn.classList.add("loading");
-  btn.disabled = true;
-  
-    const data = {
-      nama:document.getElementById("nama").value,
-      hadir:document.getElementById("hadir").value,
-      jumlah:document.getElementById("jumlah").value,
-      ucapan:document.getElementById("ucapan").value
-    };
-  
-    try{
-      await fetch(scriptURL,{
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify(data),
-        mode:"no-cors" // hanya POST yg pakai ini
-      });
-  
-      document.getElementById("status").innerHTML="Terima kasih 🙏";
-  
-      document.getElementById("nama").value="";
-      document.getElementById("jumlah").value="1";
-      document.getElementById("ucapan").value="";
-  
-      function loadGuestbook(){
-  fetch(scriptURL)
-    .then(res=>res.json())
-    .then(data=>{
-      let html="";
+  envelopePage.style.display="none";
+  invitation.style.display="block";
+  music.currentTime = 0;
+  music.play().catch(()=>{});
 
-      const rows = data.slice(1).reverse();
-
-      rows.forEach(row=>{
-        html += `
-          <div class="wish">
-            <b>${row[1]}</b><br>
-            <span>${row[4]}</span>
-          </div>
-        `;
-      });
-
-      /* DUPLIKASI isi agar looping smooth */
-      document.getElementById("guestbook").innerHTML = html + html;
-    });
+  startCountdown(); // ← TAMBAHKAN INI
 }
   
-    }catch(err){
-      document.getElementById("status").innerHTML="Gagal mengirim 😢";
-      console.log(err);
-    }
-  
-    btn.classList.remove("loading");
-btn.disabled = false;
+  // ===== COUNTDOWN FULL =====
+
+  function startCountdown(){
+
+const eventStart = new Date("2026-05-18T15:00:00+08:00").getTime();
+const eventEnd   = new Date("2026-05-18T18:00:00+08:00").getTime();
+
+const timer = setInterval(() => {
+  const now = new Date().getTime();
+  const msg = document.getElementById("countdownMessage");
+
+  // setelah acara selesai
+  if (now > eventEnd){
+    msg.innerHTML = "Terima kasih atas doa & kehadirannya 🙏";
+    document.getElementById("countdown").style.display="none";
+    document.getElementById("countdownTitle").style.display="none";
+    clearInterval(timer);
+    return;
   }
+
+  // saat acara berlangsung
+  if (now >= eventStart && now <= eventEnd){
+    msg.innerHTML = "Acara sedang berlangsung 🙏";
+    document.getElementById("countdown").style.display="none";
+    document.getElementById("countdownTitle").style.display="none";
+    clearInterval(timer);
+    return;
+  }
+
+  // sebelum acara (countdown jalan)
+  const distance = eventStart - now;
+
+  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((distance / (1000 * 60)) % 60);
+  const seconds = Math.floor((distance / 1000) % 60);
+
+  document.getElementById("days").innerHTML = days;
+  document.getElementById("hours").innerHTML = hours;
+  document.getElementById("minutes").innerHTML = minutes;
+  document.getElementById("seconds").innerHTML = seconds;
+
+}, 1000);
+
+}
   
+async function kirim(){
+  const btn = document.getElementById("btnKirim");
+if(btn.classList.contains("loading")) return;
+
+  document.getElementById("status").innerHTML="";
+
+  // 👉 TAMBAHKAN VALIDASI DI SINI
+  const nama   = document.getElementById("nama").value.trim();
+  const hadir  = document.getElementById("hadir").value;
+  const jumlah = parseInt(document.getElementById("jumlah").value) || 0;
+  const ucapan = document.getElementById("ucapan").value.trim();
+
+  if(!nama){
+    alert("Nama tidak boleh kosong 🙏");
+    return;
+  }
+
+  if(jumlah < 1){
+    alert("Jumlah tamu minimal 1 orang 🙏");
+    return;
+  }
+
+  if(!ucapan){
+    alert("Ucapan tidak boleh kosong 🙏");
+    return;
+  }
+
+  // ===== lanjut proses kirim =====
+  btn.classList.add("loading");
+  btn.disabled = true;
+
+  const data = { nama, hadir, jumlah, ucapan };
+
+  try{
+    await fetch(scriptURL,{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify(data),
+      mode:"no-cors"
+    });
+
+    setTimeout(()=>{
+  document.getElementById("status").innerHTML="Terima kasih 🙏";
+},700);
+    
+    loadGuestbook();
+
+    document.getElementById("nama").value="";
+    document.getElementById("jumlah").value="1";
+    document.getElementById("ucapan").value="";
+
+  }catch(err){
+    document.getElementById("status").innerHTML="Gagal mengirim 😢";
+    console.log(err);
+  }
+
+  btn.classList.remove("loading");
+  btn.disabled = false;
+}
+  
+function escapeHTML(str){
+  if(!str) return "";
+  return str.replace(/[&<>"']/g, function(m){
+    return {
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#039;'
+    }[m];
+  });
+}
+
   // ✅ LOAD GUESTBOOK (GET TANPA no-cors)
   function loadGuestbook(){
     fetch(scriptURL)
@@ -578,13 +752,13 @@ btn.disabled = false;
           html += `
   <div class="wish">
     <div class="wish-header">
-      <div class="wish-name">${row[1]}</div>
-      <div class="wish-status ${row[2] === "Hadir" ? "hadir" : "tidak"}">
-        ${row[2]}
+      <div class="wish-name">${escapeHTML(row[1])}</div>
+      <div class="wish-status ${escapeHTML(row[2]) === "Hadir" ? "hadir" : "tidak"}">
+        ${escapeHTML(row[2])}
       </div>
     </div>
     <div class="wish-text">
-      ${row[4]}
+      ${escapeHTML(row[4])}
     </div>
   </div>
 `;
@@ -594,9 +768,23 @@ btn.disabled = false;
           html = "<p>Belum ada ucapan 💌</p>";
         }
   
-        document.getElementById("guestbook").innerHTML = html;
+        const guestbook = document.getElementById("guestbook");
+        guestbook.innerHTML = html;
+
+        /* reset animasi agar restart smooth */
+        guestbook.style.animation = "none";
+        void guestbook.offsetHeight;
+        guestbook.style.animation = "scrollGuestbook 35s linear infinite";
+
+        if(rows.length < 4){
+        guestbook.style.animation = "none";
+        }
       })
-      .catch(err => console.log("Guestbook error:", err));
+      .catch(err => {
+      console.log("Guestbook error:", err);
+      document.getElementById("guestbook").innerHTML =
+      "<p>Ucapan belum dapat dimuat 🙏</p>";
+});
   }
   
   // autoplay fix
