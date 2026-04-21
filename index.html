@@ -5,9 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Undangan Tigang Sasih</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;600&family=Great+Vibes&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="poster.jpg">
 
 <style>
-
+#countdown{ visibility:hidden; }
+input, textarea, select{
+  font-size:16px;
+}
 :root{
   --ink:#3b2a1a;        /* warna tinta utama */
   --gold:#c6a24a;       /* gold aksen */
@@ -60,6 +64,7 @@ body{
   margin:0;
   font-family:'Segoe UI';
   text-align:center;
+  overflow-x:hidden;
 
   background: radial-gradient(circle at top,
     #f6f1e9,
@@ -481,6 +486,7 @@ textarea{height:80px}
 
 /* ===== COUNTDOWN HORIZONTAL NO WRAP ===== */
 .countdown-wrapper{
+  -webkit-overflow-scrolling: touch;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -520,7 +526,7 @@ textarea{height:80px}
 <body>
   <div class="flowers"></div>
 
-  <audio id="bgMusic" loop>
+  <audio id="bgMusic" loop preload="auto">
     <source src="music.mp3" type="audio/mp3">
   </audio>
 
@@ -596,6 +602,7 @@ textarea{height:80px}
 </div>
 
 <script>
+  let countdownPaused = false;
   const scriptURL = "https://script.google.com/macros/s/AKfycby9xRGZGTcTlQUmZusS7PPfRJ8ZyY4KCDMAxE7qEbr62VrqbFXLsrh-ZyYEE73zzwrW4w/exec";
   
   const envelopePage = document.getElementById("envelopePage");
@@ -604,48 +611,86 @@ textarea{height:80px}
   
   // nama tamu dari link
   const params = new URLSearchParams(window.location.search);
-  const guest = params.get('to');
+  const guest = decodeURIComponent(params.get('to') || "");
   if(guest){
     document.getElementById("guestName").textContent = "Yth. " + guest;
     document.getElementById("guestName2").textContent = "Yth. " + guest;
     document.getElementById("nama").value = guest;
   }
+
+  else{
+  document.getElementById("guestName2").textContent = "Tamu Undangan";
+}
   
+  let countdownStarted = false;
   function openInvite(){
   envelopePage.style.display="none";
   invitation.style.display="block";
-  music.currentTime = 0;
-  music.play().catch(()=>{});
+  window.scrollTo({ top: 0, behavior: "smooth" });
 
+  document.getElementById("countdown").style.visibility="visible";
+
+  if(!countdownStarted){
   startCountdown(); // ← TAMBAHKAN INI
+  countdownStarted = true;
+  }
+  localStorage.setItem("invite_opened","1");
+  unlockMusic();
 }
   
   // ===== COUNTDOWN FULL =====
 
-  function startCountdown(){
+  let countdownTimer = null;
+
+function startCountdown(){
 
 const eventStart = new Date("2026-05-18T15:00:00+08:00").getTime();
 const eventEnd   = new Date("2026-05-18T18:00:00+08:00").getTime();
-
-const timer = setInterval(() => {
+document.getElementById("countdownMessage").innerHTML = "Mohon doa restu 🙏";
+countdownTimer = setInterval(() => {
   const now = new Date().getTime();
+  if(countdownPaused){
+  return; // skip update
+}
   const msg = document.getElementById("countdownMessage");
 
   // setelah acara selesai
   if (now > eventEnd){
-    msg.innerHTML = "Terima kasih atas doa & kehadirannya 🙏";
+    document.querySelector("#countdownTitle p").innerHTML = "Terima kasih atas doa & kehadirannya";
+    //msg.innerHTML = "Terima kasih atas doa & kehadirannya 🙏";
     document.getElementById("countdown").style.display="none";
     document.getElementById("countdownTitle").style.display="none";
-    clearInterval(timer);
+    const btn = document.getElementById("btnKirim");
+    btn.disabled = true;
+    btn.innerHTML = '<span class="btn-text">Kirim Ucapan Ditutup</span>';
+    btn.style.background = "#9e9e9e";
+    document.querySelector(".maps").style.display="none";
+    
+    document.getElementById("days").innerHTML = 0;
+    document.getElementById("hours").innerHTML = 0;
+    document.getElementById("minutes").innerHTML = 0;
+    document.getElementById("seconds").innerHTML = 0;
+    clearInterval(countdownTimer);
+    countdownTimer = null;
     return;
   }
 
   // saat acara berlangsung
   if (now >= eventStart && now <= eventEnd){
-    msg.innerHTML = "Acara sedang berlangsung 🙏";
+    document.querySelector("#countdownTitle p").innerHTML = "Acara Sedang Berlangsung";
     document.getElementById("countdown").style.display="none";
-    document.getElementById("countdownTitle").style.display="none";
-    clearInterval(timer);
+    //document.getElementById("countdownTitle").style.display="none";
+    const btn = document.getElementById("btnKirim");
+    btn.disabled = true;
+    btn.innerHTML = '<span class="btn-text">Kirim Ucapan Ditutup</span>';
+    btn.style.background = "#9e9e9e";
+
+    document.getElementById("days").innerHTML = 0;
+    document.getElementById("hours").innerHTML = 0;
+    document.getElementById("minutes").innerHTML = 0;
+    document.getElementById("seconds").innerHTML = 0;
+    clearInterval(countdownTimer);
+    countdownTimer = null;
     return;
   }
 
@@ -667,6 +712,16 @@ const timer = setInterval(() => {
 }
   
 async function kirim(){
+  document.activeElement.blur();
+  const eventStart = new Date("2026-05-18T15:00:00+08:00").getTime();
+  if(Date.now() >= eventStart){
+  alert("Kirim ucapan sudah ditutup 🙏");
+  return;
+}
+  if(localStorage.getItem("rsvp_sent")){
+  alert("Ucapan sudah pernah dikirim 🙏");
+  return;
+}
   const btn = document.getElementById("btnKirim");
 if(btn.classList.contains("loading")) return;
 
@@ -675,16 +730,12 @@ if(btn.classList.contains("loading")) return;
   // 👉 TAMBAHKAN VALIDASI DI SINI
   const nama   = document.getElementById("nama").value.trim();
   const hadir  = document.getElementById("hadir").value;
-  const jumlah = parseInt(document.getElementById("jumlah").value) || 0;
+  let jumlah = parseInt(document.getElementById("jumlah").value) || 0;
+  jumlah = Math.max(1, Math.min(10, jumlah));
   const ucapan = document.getElementById("ucapan").value.trim();
 
   if(!nama){
     alert("Nama tidak boleh kosong 🙏");
-    return;
-  }
-
-  if(jumlah < 1){
-    alert("Jumlah tamu minimal 1 orang 🙏");
     return;
   }
 
@@ -700,30 +751,47 @@ if(btn.classList.contains("loading")) return;
   const data = { nama, hadir, jumlah, ucapan };
 
   try{
-    await fetch(scriptURL,{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify(data),
-      mode:"no-cors"
-    });
+    // ⏱️ timeout request 10 detik (biar tidak loading selamanya)
+const controller = new AbortController();
+setTimeout(() => controller.abort(), 10000);
+
+const res = await fetch(scriptURL,{
+  method:"POST",
+  headers:{ "Content-Type":"application/json" },
+  body:JSON.stringify(data),
+  signal: controller.signal
+});
+
+const result = await res.json();
+if(result.status !== "ok") throw "server error";
 
     setTimeout(()=>{
-  document.getElementById("status").innerHTML="Terima kasih 🙏";
-},700);
-    
-    loadGuestbook();
+      document.getElementById("status").innerHTML="Terima kasih 🙏";
+      btn.innerHTML = '<span class="btn-text">Terkirim ✓</span>';
+      btn.style.background = "#2e7d32";
+      localStorage.setItem("rsvp_sent","1");
+      btn.classList.remove("loading");
+      document.querySelector(".guestbook-wrapper")
+      .scrollIntoView({behavior:"smooth"});
+      //btn.disabled = false;
+    },700);
 
+    setTimeout(loadGuestbook,800);
+
+    if(!guest){
     document.getElementById("nama").value="";
+    }
     document.getElementById("jumlah").value="1";
     document.getElementById("ucapan").value="";
 
   }catch(err){
     document.getElementById("status").innerHTML="Gagal mengirim 😢";
     console.log(err);
+    btn.disabled = false;
+    btn.classList.remove("loading");
+    btn.innerHTML = '<span class="btn-text">Kirim Ucapan</span><span class="btn-loader"></span>';
+    return;
   }
-
-  btn.classList.remove("loading");
-  btn.disabled = false;
 }
   
 function escapeHTML(str){
@@ -742,9 +810,14 @@ function escapeHTML(str){
   // ✅ LOAD GUESTBOOK (GET TANPA no-cors)
   function loadGuestbook(){
     fetch(scriptURL)
-      .then(res => res.json())
-      .then(data => {
+    .then(res => res.text())
+    .then(text => {
+      try { return JSON.parse(text); }
   
+      catch { return []; }
+    })
+    .then(data => Array.isArray(data) ? data : [])
+    .then(data => {
         let html = "";
         const rows = data.slice(1).filter(row => row[4]);
   
@@ -767,9 +840,14 @@ function escapeHTML(str){
         if(html === ""){
           html = "<p>Belum ada ucapan 💌</p>";
         }
+        if(rows.length === 0){
+        const guestbook = document.getElementById("guestbook");
+        guestbook.style.animation = "none";
+        guestbook.style.transform = "translateY(0)";
+}
   
         const guestbook = document.getElementById("guestbook");
-        guestbook.innerHTML = html;
+        guestbook.innerHTML = rows.length ? html + html : html;
 
         /* reset animasi agar restart smooth */
         guestbook.style.animation = "none";
@@ -778,6 +856,7 @@ function escapeHTML(str){
 
         if(rows.length < 4){
         guestbook.style.animation = "none";
+        guestbook.style.transform = "translateY(0)";
         }
       })
       .catch(err => {
@@ -787,16 +866,65 @@ function escapeHTML(str){
 });
   }
   
-  // autoplay fix
-  document.addEventListener("click", () => {
-    if (music.paused){
-      music.play().catch(()=>{});
-    }
-  });
+  // autoplay fix (play sekali saja setelah interaksi pertama)
+let musicUnlocked = false;
+invitation.addEventListener("click", unlockMusic, {once:true});
+function unlockMusic(){
+  if(!musicUnlocked){
+    music.play().catch(()=>{});
+    musicUnlocked = true;
+  }
+}
   
   window.addEventListener("load", () => {
     loadGuestbook();
   });
+
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Enter" && e.target.tagName !== "TEXTAREA"){
+    e.preventDefault();
+  }
+});
+
+
+document.addEventListener("visibilitychange", function(){
+  countdownPaused = document.hidden;
+
+  if(!document.hidden && countdownStarted && !countdownTimer){
+    startCountdown(); // restart timer jika hilang
+  }
+
+  if(document.hidden){
+    music.pause();
+  }else if(musicUnlocked){
+    music.play().catch(()=>{});
+  }
+});
+
+// restore state tombol jika sudah pernah kirim
+if(localStorage.getItem("rsvp_sent")){
+  const btn = document.getElementById("btnKirim");
+  btn.innerHTML = '<span class="btn-text">Terkirim ✓</span>';
+  btn.style.background = "#2e7d32";
+  btn.disabled = true;
+}
+
+// ⛔ lock RSVP jika acara sudah mulai / selesai (saat reload halaman)
+(function lockRSVPByTime(){
+  const eventStart = new Date("2026-05-18T15:00:00+08:00").getTime();
+  const eventEnd   = new Date("2026-05-18T18:00:00+08:00").getTime();
+  const now = new Date().getTime();
+
+  if(now >= eventStart){
+    const btn = document.getElementById("btnKirim");
+    btn.style.display = "none";
+  }
+})();
+
+// auto buka jika pernah dibuka
+if(localStorage.getItem("invite_opened")){
+  openInvite();
+}
   </script>
 </body>
 </html>
